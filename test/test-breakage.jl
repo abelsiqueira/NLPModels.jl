@@ -31,6 +31,7 @@ function test_breakage()
   thispath = pwd()
   mkpath("test-breakage")
   try
+    error()
     for (i,package) in enumerate(packages)
       msgn("#"^100)
       msgn("  Testing package $package")
@@ -78,13 +79,14 @@ function test_breakage()
     msgn("  Version $(tagged[i]): " * (passing[i] ? "✓" : "x"))
   end
 
-  if lowercase(get(ENV, "TRAVIS", "false")) == "true"
+  #if lowercase(get(ENV, "TRAVIS", "false")) == "true"
     myauth = GitHub.authenticate(ENV["GITHUB_AUTH"])
-    myrepo = repo(ENV["TRAVIS_PULL_REQUEST_SLUG"], auth=myauth) # "JuliaSmoothOptimizers/NLPModels.jl"
+    #myrepo = repo(ENV["TRAVIS_PULL_REQUEST_SLUG"], auth=myauth) # "JuliaSmoothOptimizers/NLPModels.jl"
+    myrepo = repo("abelsiqueira/NLPModels.jl", auth=myauth) # "JuliaSmoothOptimizers/NLPModels.jl"
     prs = pull_requests(myrepo, auth=myauth)
     local pr
     for p in prs[1]
-      if p.merge_commit_sha == ENV["TRAVIS_COMMIT"]
+      if p.merge_commit_sha == Git.readstring(`log -1 --format="%H"`) #ENV["TRAVIS_COMMIT"]
         pr = p
       end
     end
@@ -98,7 +100,7 @@ function test_breakage()
       output *= (passing[i] ? version_pass(tagged[i]) : version_fail(tagged[i])) * " |\n"
     end
     create_comment(myrepo, pr, output, auth=myauth)
-  end
+  #end
 end
 
 test_breakage()
