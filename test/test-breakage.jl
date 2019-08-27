@@ -90,10 +90,12 @@ function test_breakage()
     end
 
     output = ":robot: Testing breakage of this commit\n"
+    output *= "| Package Name | master | Tagged |\n"
+    output *= "|--|--|--|\n"
     for (i,package) in enumerate(packages)
-      output *= "- $package "
-      output *= (passing_master[i] ? master_pass : master_fail) * " "
-      output *= (passing[i] ? version_pass(tagged[i]) : version_fail(tagged[i])) * "\n"
+      output *= "| $package | "
+      output *= (passing_master[i] ? master_pass : master_fail) * " | "
+      output *= (passing[i] ? version_pass(tagged[i]) : version_fail(tagged[i])) * " |\n"
     end
     create_comment(myrepo, pr, output, auth=myauth)
   end
