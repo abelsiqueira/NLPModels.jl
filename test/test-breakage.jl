@@ -92,7 +92,7 @@ function test_breakage()
       end
     end
 
-    output = ":robot: Testing breakage of this commit\n"
+    output = ":robot: Testing breakage of this commit\n\n"
     output *= "| Package Name | master | Tagged |\n"
     output *= "|--|--|--|\n"
     for (i,package) in enumerate(packages)
