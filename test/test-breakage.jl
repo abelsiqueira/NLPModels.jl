@@ -97,6 +97,7 @@ function test_breakage()
       output *= (passing_master[i] ? master_pass : master_fail) * " | "
       output *= (passing[i] ? version_pass(tagged[i]) : version_fail(tagged[i])) * " |\n"
     end
+    @info "" output
     create_comment(myrepo, pr, output, auth=myauth)
   end
 end
