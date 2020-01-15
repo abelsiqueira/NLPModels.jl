@@ -37,6 +37,7 @@ function test_breakage()
       msgn("#"^100)
       cd(joinpath(thispath, "test-breakage"))
       try
+        error("NO")
         url = "https://github.com/JuliaSmoothOptimizers/$package.jl"
         Git.run(`clone $url`)
         cd("$package.jl")
@@ -53,6 +54,7 @@ function test_breakage()
       cd(joinpath(thispath, "test-breakage"))
       rm("$package.jl", force=true, recursive=true)
       try
+        error("NO")
         # Testing on last tagged version
         url = "https://github.com/JuliaSmoothOptimizers/$package.jl"
         Git.run(`clone $url`)
@@ -104,7 +106,7 @@ function test_breakage()
       output *= (passing_master[i] ? master_pass : master_fail) * " | "
       output *= (passing[i] ? version_pass(tagged[i]) : version_fail(tagged[i])) * " |\n"
     end
-    create_comment(myrepo, pr, output, auth=myauth)
+    create_comment(GitHub.DEFAULT_API, myrepo, pr, output, auth=myauth, kind=:pr)
   end
 end
 
