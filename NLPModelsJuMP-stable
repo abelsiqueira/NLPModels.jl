@@ -1,6 +1,6 @@
 {
-  "tag": "stable",
+  "tag": "master",
   "pass": false,
-  "travis_link": "https://travis-ci.org/abelsiqueira/NLPModels.jl/jobs/638068589",
+  "travis_link": "https://travis-ci.org/abelsiqueira/NLPModels.jl/jobs/638071753",
   "pr": "5"
 }
