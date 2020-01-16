@@ -106,7 +106,7 @@ function test_breakage()
       output *= (passing_master[i] ? master_pass : master_fail) * " | "
       output *= (passing[i] ? version_pass(tagged[i]) : version_fail(tagged[i])) * " |\n"
     end
-    create_comment(GitHub.DEFAULT_API, myrepo, pr, :pr, body=output, auth=myauth)
+    create_comment(GitHub.DEFAULT_API, myrepo, pr, :pr, auth=myauth, params=Dict(:body => output))
   end
 end
 
