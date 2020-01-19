@@ -4,7 +4,7 @@ problems = ["BROWNDEN", "HS5", "HS6", "HS10", "HS11", "HS14"]
 nls_problems = ["LLS", "MGH01", "NLSHS20"]
 
 # Including problems so that they won't be multiply loaded
-for problem in problems ∪ ["GENROSE"] # GENROSE does not have a manual version, so it's separate
+for problem in problems
   include("problems/$(lowercase(problem)).jl")
 end
 for problem in nls_problems
@@ -12,11 +12,8 @@ for problem in nls_problems
 end
 
 println("Testing printing of nlp.meta")
-print(ADNLPModel(x->0, zeros(10), lvar=[-ones(5); -Inf*ones(5)],
-                 uvar=[ones(3); Inf*ones(4); collect(2:4)],
-                 name="Unconstrained example").meta)
-print(ADNLPModel(x->0, zeros(10), c=x->[0.0;0.0;0.0], lcon=[0.0;0.0;-Inf],
-                 ucon=[Inf;0.0;0.0], name="Constrained example").meta)
+print(BROWNDEN())
+print(HS14())
 
 # A problem with zero variables doesn't make sense.
 @test_throws(ErrorException, NLPModelMeta(0))
@@ -48,11 +45,7 @@ end
 @assert isa(hess_op(model, [0.]), LinearOperator)
 @assert isa(jac_op(model, [0.]), LinearOperator)
 
-# ADNLPModel with no functions
-model = ADNLPModel(x->dot(x,x), zeros(2), name="square")
-@assert model.meta.name == "square"
-
-model = genrose_autodiff()
+model = BROWNDEN()
 for counter in fieldnames(typeof(model.counters))
   @eval @assert $counter(model) == 0
 end
@@ -74,30 +67,29 @@ include("test_qn_model.jl")
 @printf("Constraints, if any, must have been declared in the same order.\n")
 
 include("multiple-precision.jl")
+include("test_view_subarray.jl")
 include("consistency.jl")
 @printf("%24s\tConsistency   Derivative Check   Quasi-Newton  Slack variant\n", " ")
 for problem in problems
   @printf("Checking problem %-20s", problem)
-  nlp_ad = eval(Meta.parse(lowercase(problem) * "_autodiff"))()
   nlp_man = eval(Meta.parse(problem))()
 
-  nlps = [nlp_ad, nlp_man]
+  nlps = Any[nlp_man]
   consistent_nlps(nlps)
 
   for nlp in nlps ∪ SlackModel.(nlps)
       multiple_precision(nlp)
+      test_view_subarray_nlp(nlp)
   end
 end
 
-include("test_autodiff_model.jl")
 include("test_nlsmodels.jl")
 include("nls_consistency.jl")
 for problem in ["LLS", "MGH01", "NLSHS20"]
   @printf("Checking problem %-20s", problem)
-  nls_ad = eval(Meta.parse(lowercase(problem) * "_autodiff"))()
   nls_man = eval(Meta.parse(problem))()
 
-  nlss = [nls_ad, nls_man]
+  nlss = Any[nls_man]
   spc = lowercase(problem) * "_special"
   if isdefined(Main, Symbol(spc))
     push!(nlss, eval(Meta.parse(spc))())
@@ -112,11 +104,9 @@ for problem in ["LLS", "MGH01", "NLSHS20"]
 
   for nls in nlss ∪ SlackNLSModel.(nlss) ∪ FeasibilityFormNLS.(nlss)
     multiple_precision(nls)
+    test_view_subarray_nls(nls)
   end
   println("✓")
 end
-include("test_feasibility_form_nls.jl")
-include("test_view_subarray.jl")
-test_view_subarrays()
 include("test_memory_of_coord.jl")
 test_memory_of_coord()

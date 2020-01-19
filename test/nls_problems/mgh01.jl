@@ -1,13 +1,5 @@
 using NLPModels: increment!
 
-function mgh01_autodiff()
-
-  x0 = [-1.2; 1.0]
-  F(x) = [10 * (x[2] - x[1]^2); 1 - x[1]]
-
-  return ADNLSModel(F, x0, 2)
-end
-
 mgh01_special() = FeasibilityResidual(MGH01Feas())
 
 mutable struct MGH01 <: AbstractNLSModel

@@ -12,6 +12,4 @@ end
 @test_throws(NotImplementedError, jth_hess_residual(model, [0], 1))
 @test_throws(NotImplementedError, hprod_residual!(model, [0], 1, [2], [3]))
 
-include("test_autodiff_nls_model.jl")
 include("test_lls_model.jl")
-include("test_feasibility_nls_model.jl")

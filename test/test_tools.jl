@@ -1,4 +1,4 @@
-nlp = ADNLPModel(x->dot(x,x), zeros(2))
+nlp = BROWNDEN()
 @test !has_bounds(nlp)
 @test !bound_constrained(nlp)
 @test unconstrained(nlp)
@@ -6,8 +6,7 @@ nlp = ADNLPModel(x->dot(x,x), zeros(2))
 @test !equality_constrained(nlp)
 @test !inequality_constrained(nlp)
 
-nlp = ADNLPModel(x->dot(x,x), zeros(2),
-                 lvar=zeros(2))
+nlp = HS5()
 @test has_bounds(nlp)
 @test bound_constrained(nlp)
 @test !unconstrained(nlp)
@@ -15,8 +14,7 @@ nlp = ADNLPModel(x->dot(x,x), zeros(2),
 @test !equality_constrained(nlp)
 @test !inequality_constrained(nlp)
 
-nlp = ADNLPModel(x->dot(x,x), zeros(2),
-                 c=x->[prod(x)-1], lcon=[0.0], ucon=[0.0])
+nlp = HS6()
 @test !has_bounds(nlp)
 @test !bound_constrained(nlp)
 @test !unconstrained(nlp)
@@ -24,8 +22,7 @@ nlp = ADNLPModel(x->dot(x,x), zeros(2),
 @test equality_constrained(nlp)
 @test !inequality_constrained(nlp)
 
-nlp = ADNLPModel(x->dot(x,x), zeros(2),
-                 c=x->[prod(x)-1], lcon=[0.0], ucon=[1.0])
+nlp = HS10()
 @test !has_bounds(nlp)
 @test !bound_constrained(nlp)
 @test !unconstrained(nlp)
@@ -33,9 +30,7 @@ nlp = ADNLPModel(x->dot(x,x), zeros(2),
 @test !equality_constrained(nlp)
 @test inequality_constrained(nlp)
 
-nlp = ADNLPModel(x->dot(x,x), zeros(2),
-                 c=x->[prod(x)-1; sum(x)-1],
-                 lcon=zeros(2), ucon=[0.0; Inf])
+nlp = HS14()
 @test !has_bounds(nlp)
 @test !bound_constrained(nlp)
 @test !unconstrained(nlp)
@@ -43,9 +38,8 @@ nlp = ADNLPModel(x->dot(x,x), zeros(2),
 @test !equality_constrained(nlp)
 @test !inequality_constrained(nlp)
 
-nlp = ADNLPModel(x->dot(x,x), zeros(2),
-                 c=x->[sum(x)-1], lcon=zeros(1), ucon=zeros(1),
-                 lin=[1])
+#= Implement after QuadraticModels is merged inside NLPModels
+nlp = ???
 @test !has_bounds(nlp)
 @test !bound_constrained(nlp)
 @test !unconstrained(nlp)
@@ -53,12 +47,11 @@ nlp = ADNLPModel(x->dot(x,x), zeros(2),
 @test equality_constrained(nlp)
 @test !inequality_constrained(nlp)
 
-nlp = ADNLPModel(x->dot(x,x), zeros(2), lvar=zeros(2), uvar=ones(2),
-                 c=x->[sum(x)-1], lcon=zeros(1), ucon=zeros(1),
-                 lin=[1])
+nlp = ???
 @test has_bounds(nlp)
 @test !bound_constrained(nlp)
 @test !unconstrained(nlp)
 @test linearly_constrained(nlp)
 @test equality_constrained(nlp)
 @test !inequality_constrained(nlp)
+=#

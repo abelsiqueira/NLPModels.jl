@@ -82,7 +82,6 @@ include("nls_meta.jl")
 
 nls_meta(nls :: AbstractNLSModel) = nls.nls_meta
 
-include("autodiff_nlsmodel.jl")
 include("lls_model.jl")
 include("feasibility_residual.jl")
 

@@ -1,21 +1,21 @@
 @testset "Slack model tests" begin
   # an unconstrained problem should be returned unchanged
-  @printf("Checking slack formulation of genrose\t")
-  model = genrose_autodiff()
+  @printf("Checking slack formulation of brownden\t")
+  model = BROWNDEN()
   smodel = SlackModel(model)
   @test smodel == model
   @printf("✓\n")
 
   # a bound-constrained problem should be returned unchanged
   @printf("Checking slack formulation of hs5\t")
-  model = hs5_autodiff()
+  model = HS5()
   smodel = SlackModel(model)
   @test smodel == model
   @printf("✓\n")
 
   # an equality-constrained problem should be returned unchanged
   @printf("Checking slack formulation of hs6\t")
-  model = hs6_autodiff()
+  model = HS6()
   smodel = SlackModel(model)
   @test smodel == model
   @printf("✓\n")
@@ -103,18 +103,12 @@
     reset!(smodel)
   end
 
-  for problem in ["hs10", "hs11", "hs14"]
+  for problem in [:HS10, :HS11, :HS14]
     @printf("Checking slack formulation of %-8s\t", problem)
-    problem_f = eval(Symbol(problem * "_autodiff"))
+    problem_f = eval(problem)
     nlp = problem_f()
     slack_model = SlackModel(nlp)
     check_slack_model(slack_model)
     @printf("✓\n")
   end
-end
-
-@testset "Test that type is maintained (#217)" begin
-  nlp = ADNLPModel(x -> dot(x, x), ones(Float16, 2), c=x->sum(x), lcon=[-1.0], ucon=[1.0])
-  snlp = SlackModel(nlp)
-  @test eltype(snlp.meta.x0) == Float16
 end

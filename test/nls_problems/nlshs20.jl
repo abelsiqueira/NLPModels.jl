@@ -1,18 +1,5 @@
 using NLPModels: increment!
 
-function nlshs20_autodiff()
-
-  x0 = [-2.0; 1.0]
-  F(x) = [10 * (x[2] - x[1]^2); 1 - x[1]]
-  lvar = [-0.5; -Inf]
-  uvar = [0.5; Inf]
-  c(x) = [x[1] + x[2]^2; x[1]^2 + x[2]; x[1]^2 + x[2]^2 - 1]
-  lcon = zeros(3)
-  ucon = fill(Inf, 3)
-
-  return ADNLSModel(F, x0, 2, lvar=lvar, uvar=uvar, c=c, lcon=lcon, ucon=ucon)
-end
-
 mutable struct NLSHS20 <: AbstractNLSModel
   meta :: NLPModelMeta
   nls_meta :: NLSMeta
