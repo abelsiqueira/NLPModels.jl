@@ -122,7 +122,7 @@ for problem in nls_problems
   end
 
   # LLSModel returns the internal A for jac, hence it doesn't respect type input
-  idx = findall(typeof.(nlss) .== LLSModel)
+  idx = findall([typeof(nls) <: LLSModels for nls in nlss])
   if length(idx) > 0
     deleteat!(nlss, idx)
   end
